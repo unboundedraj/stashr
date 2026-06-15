@@ -40,8 +40,10 @@ import {
   MoreVertical,
   Plus,
 } from "lucide-react";
+import { useTeam } from "@/lib/contexts/team-context";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type ViewMode = "grid" | "infinite";
 const VIEW_STORAGE_KEY = "stashr.bookmarks.viewMode";
@@ -58,6 +60,23 @@ const BookmarkFolderDetailPage = () => {
   const [showSort, setShowSort] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+
+  // Switching teams while on a folder page means this folder almost certainly
+  // belongs to a different team — bounce back to the list with a toast so the
+  // user isn't left staring at a 404.
+  const { currentTeam } = useTeam();
+  const originalTeamIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!currentTeam?.id) return;
+    if (originalTeamIdRef.current === null) {
+      originalTeamIdRef.current = currentTeam.id;
+      return;
+    }
+    if (currentTeam.id !== originalTeamIdRef.current) {
+      toast.info("Switched team - returning to bookmarks");
+      router.replace("/bookmarks");
+    }
+  }, [currentTeam?.id, router]);
 
   // Restore persisted view mode on mount.
   useEffect(() => {

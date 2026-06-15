@@ -18,7 +18,7 @@ async function loadAccessibleBoard(opts: {
   if (board.teamId && String(board.teamId) === opts.teamId) {
     return { board, canRead: true, canWriteCards: true };
   }
-  if (board.userId === opts.userId) {
+  if (!board.teamId && board.userId === opts.userId) {
     return { board, canRead: true, canWriteCards: true };
   }
   const collab = await BoardCollaboration.findOne({

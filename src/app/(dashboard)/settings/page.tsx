@@ -296,14 +296,14 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8 py-6">
+    <div className="mx-auto space-y-8">
       <section className="space-y-4">
-        <header>
-          <h2 className="text-lg font-semibold">Team</h2>
-          <p className="text-muted-foreground text-sm">
+        <div>
+          <h1 className="font-display text-3xl tracking-tight">Team</h1>
+          <p className="text-muted-foreground">
             Update your team&apos;s name and logo.
           </p>
-        </header>
+        </div>
         <div className="bg-background flex flex-col items-start gap-4 rounded-lg border p-4 sm:flex-row sm:items-center">
           <ImageUpload
             currentImage={logoUrl}

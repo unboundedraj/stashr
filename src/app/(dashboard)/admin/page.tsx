@@ -77,7 +77,9 @@ export default function AdminPage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <Shield className="text-muted-foreground mx-auto mb-4 h-16 w-16" />
-          <h1 className="mb-2 text-2xl font-semibold">Access Denied</h1>
+          <h1 className="mb-2 text-2xl font-semibold tabular-nums">
+            Access Denied
+          </h1>
           <p className="text-muted-foreground">
             You don&apos;t have permission to access this page.
           </p>
@@ -87,13 +89,13 @@ export default function AdminPage() {
   }
 
   return (
-    <section className="mx-auto min-h-screen max-w-[86rem] space-y-8">
+    <section className="mx-auto min-h-screen space-y-2">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display flex items-center gap-2 text-3xl tracking-tight">
+          <h1 className="font-display text-3xl tracking-tight">
             Admin Dashboard
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground">
             Monitor user activity and platform statistics
           </p>
         </div>
@@ -182,18 +184,18 @@ function AnalyticsTab() {
 
       <div className="space-y-6">
         {/* User Engagement */}
-        <Card className="bg-secondary/20 relative overflow-hidden rounded-2xl border">
-          <CardHeader>
+        <Card className="bg-secondary/15 relative gap-0 overflow-hidden rounded-2xl p-1 shadow-none">
+          <CardHeader className="p-1.5">
             <CardTitle className="flex items-center gap-2">
               <SliderMinimalisticHorizontal className="h-5 w-5" />
               User Engagement
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="bg-secondary dark:bg-secondary/50 rounded-2xl p-4">
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
+              <div className="bg-secondary/40 dark:bg-secondary/30 rounded-xl p-4">
                 <p className="font-semibold">7-Day Engagement</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-semibold tabular-nums">
                   {analyticsData?.userEngagement?.engagementRate7d?.toFixed(
                     1,
                   ) ?? 0}
@@ -204,9 +206,9 @@ function AnalyticsTab() {
                   users
                 </p>
               </div>
-              <div className="bg-secondary dark:bg-secondary/50 rounded-2xl p-4">
+              <div className="bg-secondary/40 dark:bg-secondary/30 rounded-2xl p-4">
                 <p className="font-semibold">30-Day Engagement</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-semibold tabular-nums">
                   {analyticsData?.userEngagement?.engagementRate30d?.toFixed(
                     1,
                   ) ?? 0}
@@ -222,7 +224,7 @@ function AnalyticsTab() {
         </Card>
 
         {/* Popular Domains */}
-        <Card className="bg-secondary/20 relative overflow-hidden rounded-2xl border">
+        <Card className="bg-secondary/40 relative overflow-hidden rounded-2xl border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bookmark className="h-5 w-5" />
@@ -261,25 +263,25 @@ function AnalyticsTab() {
         </Card>
 
         {/* Summary Stats */}
-        <Card className="bg-secondary/20 relative overflow-hidden rounded-2xl border">
-          <CardHeader>
+        <Card className="bg-secondary/15 relative gap-0 overflow-hidden rounded-2xl p-1 shadow-none">
+          <CardHeader className="p-1.5">
             <CardTitle className="flex items-center gap-2">
               <PieChart2 className="h-5 w-5" />
               Platform Summary
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="bg-secondary dark:bg-secondary/50 rounded-2xl p-4">
+          <CardContent className="p-0">
+            <div className="grid grid-cols-1 gap-1 md:grid-cols-2">
+              <div className="bg-secondary/40 dark:bg-secondary/30 rounded-xl p-4">
                 <p className="font-semibold">Average Folders per User</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-semibold tabular-nums">
                   {analyticsData?.summary?.averageFoldersPerUser?.toFixed(1) ??
                     0}
                 </p>
               </div>
-              <div className="bg-secondary dark:bg-secondary/50 rounded-2xl p-4">
+              <div className="bg-secondary/40 dark:bg-secondary/30 rounded-xl p-4">
                 <p className="font-semibold">Average Bookmarks per User</p>
-                <p className="text-2xl font-semibold">
+                <p className="text-2xl font-semibold tabular-nums">
                   {analyticsData?.summary?.averageBookmarksPerUser?.toFixed(
                     1,
                   ) ?? 0}
@@ -428,10 +430,10 @@ function StatsCard({
   description: string;
 }) {
   return (
-    <Card className="bg-secondary/20 relative flex overflow-hidden rounded-2xl border p-0">
+    <Card className="bg-secondary/15 border-muted-foreground/10 relative flex overflow-hidden rounded-2xl p-0 shadow-none">
       <CardContent className="flex w-full justify-between p-0">
         <div className="flex w-full flex-col items-start justify-center p-4">
-          <div className="text-3xl font-semibold">{value}</div>
+          <div className="text-3xl font-semibold tabular-nums">{value}</div>
           <p className="text-muted-foreground text-sm">{description}</p>
         </div>
         <div className="bg-muted/30 bg-lines-diag flex h-full flex-col items-center justify-center px-9">

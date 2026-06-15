@@ -18,7 +18,7 @@ async function canMutateCard(opts: {
   if (card.teamId && String(card.teamId) === opts.teamId) {
     return { card, canEdit: canWrite(opts.teamRole) };
   }
-  if (card.userId === opts.userId) {
+  if (!card.teamId && card.userId === opts.userId) {
     return { card, canEdit: true };
   }
   const board = await Board.findById(card.boardId);

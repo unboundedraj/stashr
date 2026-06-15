@@ -30,7 +30,9 @@ async function loadAccessibleBoard(opts: {
           : "viewer";
     return { board, role };
   }
-  if (board.userId === opts.userId) return { board, role: "owner" };
+  if (!board.teamId && board.userId === opts.userId) {
+    return { board, role: "owner" };
+  }
 
   const collab = await BoardCollaboration.findOne({
     boardId: opts.boardId,

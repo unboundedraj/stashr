@@ -24,8 +24,9 @@ async function canMutateBookmark(opts: {
     return { bookmark, canEdit: canWrite(opts.teamRole) };
   }
 
-  // Legacy: original owner
-  if (bookmark.userId === opts.userId) {
+  // Legacy: original owner — only when the bookmark is genuinely untagged.
+  // Otherwise a cross-team team-switch would bypass team isolation.
+  if (!bookmark.teamId && bookmark.userId === opts.userId) {
     return { bookmark, canEdit: true };
   }
 

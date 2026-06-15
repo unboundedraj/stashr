@@ -33,9 +33,11 @@ import {
   TrashBinTrash,
   UserPlus,
 } from "@solar-icons/react-perf/category/style/BoldDuotone";
+import { useTeam } from "@/lib/contexts/team-context";
 import { ArrowLeft, MoreVertical } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const BoardDetailPage = () => {
   const params = useParams();
@@ -45,6 +47,20 @@ const BoardDetailPage = () => {
   const [showDeleteFolderConfirm, setShowDeleteFolderConfirm] = useState(false);
   const [showCollaborators, setShowCollaborators] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const { currentTeam } = useTeam();
+  const originalTeamIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!currentTeam?.id) return;
+    if (originalTeamIdRef.current === null) {
+      originalTeamIdRef.current = currentTeam.id;
+      return;
+    }
+    if (currentTeam.id !== originalTeamIdRef.current) {
+      toast.info("Switched team - returning to boards");
+      router.replace("/board");
+    }
+  }, [currentTeam?.id, router]);
 
   // Fetch board data
   const { data: boardResponse, error } = useBoard(boardId);

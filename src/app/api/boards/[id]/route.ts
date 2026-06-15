@@ -29,8 +29,10 @@ async function loadAccessibleBoard(opts: {
     return { board, userRole };
   }
 
-  // Legacy ownership
-  if (board.userId === opts.userId) {
+  // Legacy ownership — only honor for genuinely untagged data. If the board
+  // belongs to a different team than the one the user is currently in, deny
+  // access regardless of who originally created it.
+  if (!board.teamId && board.userId === opts.userId) {
     return { board, userRole: "owner" as BoardRole };
   }
 
