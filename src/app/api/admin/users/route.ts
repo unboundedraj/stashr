@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongodb";
-import clientPromise from "@/lib/mongodb-adapter";
+import { getMongoClient } from "@/lib/mongodb-adapter";
 import { registerModels } from "@/models";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -56,7 +56,7 @@ export async function GET(): Promise<NextResponse> {
       await registerModels();
 
     // Get MongoDB client to access NextAuth users collection
-    const client = await clientPromise;
+    const client = await getMongoClient();
     const db = client.db();
     const usersCollection = db.collection("users");
 

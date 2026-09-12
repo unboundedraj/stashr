@@ -1,4 +1,4 @@
-import clientPromise from "./mongodb-adapter";
+import { getMongoClient } from "./mongodb-adapter";
 
 export interface UserUpdateData {
   userType?: 'admin' | 'user';
@@ -8,7 +8,7 @@ export interface UserUpdateData {
 
 export class UserService {
   private static async getClient() {
-    return await clientPromise;
+    return await getMongoClient();
   }
 
   /**
