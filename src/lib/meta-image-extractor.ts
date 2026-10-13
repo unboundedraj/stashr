@@ -1,3 +1,5 @@
+import { isIP } from 'net';
+
 interface MetaImageData {
   url: string;
   width?: number;
@@ -15,6 +17,59 @@ interface ExtractionResult {
     extractedUrl?: string;
     validationPassed?: boolean;
   };
+}
+
+/**
+ * Only allow fetching public http(s) URLs, so the server can't be used to
+ * reach localhost, the private network or cloud metadata endpoints
+ */
+export function isFetchableUrl(url: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return false;
+  }
+
+  const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (
+    hostname === 'localhost' ||
+    hostname.endsWith('.localhost') ||
+    hostname.endsWith('.local') ||
+    hostname.endsWith('.internal')
+  ) {
+    return false;
+  }
+
+  const ipVersion = isIP(hostname);
+  if (ipVersion === 4) {
+    const [a = 0, b = 0] = hostname.split('.').map(Number);
+    return !(
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168)
+    );
+  }
+  if (ipVersion === 6) {
+    return !(
+      hostname === '::' ||
+      hostname === '::1' ||
+      hostname.startsWith('fc') ||
+      hostname.startsWith('fd') ||
+      hostname.startsWith('fe80') ||
+      hostname.startsWith('::ffff:')
+    );
+  }
+
+  return true;
 }
 
 /**
@@ -236,6 +291,10 @@ function generateUnavailableState(): MetaImageData {
  * Validate if an image URL is accessible and returns an image
  */
 async function validateImageUrl(imageUrl: string): Promise<boolean> {
+  if (!isFetchableUrl(imageUrl)) {
+    return false;
+  }
+
   try {
     // console.log(`Validating image URL: ${imageUrl}`);
     
@@ -265,7 +324,16 @@ async function validateImageUrl(imageUrl: string): Promise<boolean> {
  */
 export async function extractMetaImage(url: string): Promise<ExtractionResult> {
   // console.log(`Starting enhanced meta image extraction for: ${url}`);
-  
+
+  if (!isFetchableUrl(url)) {
+    return {
+      success: false,
+      imageUrl: generateUnavailableState().url,
+      fallbackUsed: true,
+      error: 'URL must be a public http(s) address',
+    };
+  }
+
   try {
     // Strategy 1: Framer-specific extraction (if it's a Framer site)
     if (isFramerWebsite(url)) {

@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { extractMetaImage } from '@/lib/meta-image-extractor';
+import { extractMetaImage, isFetchableUrl } from '@/lib/meta-image-extractor';
 
 // GET /api/meta-image?url=... - Extract meta image for a given URL using metascraper
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -15,12 +15,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Validate URL format
-    try {
-      new URL(url);
-    } catch {
+    // Validate URL format and make sure it points at a public http(s) host
+    if (!isFetchableUrl(url)) {
       return NextResponse.json(
-        { error: 'Please provide a valid URL' },
+        { error: 'Please provide a valid public http(s) URL' },
         { status: 400 }
       );
     }
